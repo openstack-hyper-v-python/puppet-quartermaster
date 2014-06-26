@@ -17,10 +17,8 @@ log-dhcp
 # This range(s) is for the public interface, where dnsmasq functions
 # as a proxy DHCP server providing boot information but no IP leases.
 # Any ip in the subnet will do, so you may just put your server NIC ip here.
-<% if "@ipaddress_eth0".length > 0 %>
 dhcp-range=<%= @ipaddress_eth0 %>,proxy
-<% end %>
-<% if "@ipaddress_eth1".length > 0 %>
-dhcp-range=<%= "@ipaddress_eth1" %>,proxy
+<% if scope.lookupvar("@ipaddress_eth1") %>
+dhcp-range=<%= @ipaddress_eth1 %>,proxy
 <% end %>
 pxe-service=x86PC, "Quartermaster PXE Provisioning", pxelinux/pxelinux, <%= @ipaddress %>
