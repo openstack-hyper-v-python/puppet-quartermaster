@@ -21,12 +21,6 @@ define quartermaster::pxe {
     $rel_major = $1
     $rel_minor = $2
   }
-  
-  # Test if this is the live puppet image
-  $is_puppet = $release ? {
-     /(puppet)/   => 'true',
-     default      => 'This is not a live puppet image',
-  }
 
   # Begin Tests to deal with centos point release issues
   $is_centos = $distro ? {
@@ -182,9 +176,6 @@ define quartermaster::pxe {
     default                                              => 'No supported Pxe Kernel',
   }
 
-  if $is_puppet == 'true' {
-    $initrd = '.bin'
-  } else {
   $initrd = $distro ? {
     /(ubuntu|debian)/                                    => '.gz',
     /(redhat|centos|fedora|scientificlinux|oraclelinux)/ => '.img',
