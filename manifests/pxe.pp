@@ -91,9 +91,6 @@ define quartermaster::pxe {
     default      => "Unsupported ${distro} Release",
   }
 
-  if $is_puppet == 'true' {
-     $url = "http://130.160.68.101/${distro}/${release}/${p_arch}" # TODO: this is a temporary location
-  } else {
   $url = $distro ? {
     /(ubuntu)/          => "http://archive.ubuntu.com/${distro}/dists/${rel_name}/main/installer-${p_arch}/current/images/netboot/${distro}-installer/${p_arch}",
     /(debian)/          => "http://ftp.debian.org/${distro}/dists/${rel_name}/main/installer-${p_arch}/current/images/netboot/${distro}-installer/${p_arch}",
@@ -106,7 +103,6 @@ define quartermaster::pxe {
     /(sled)/            => 'Enterprise ISO Required',
     /(opensuse)/        => "http://download.opensuse.org/distribution/${release}/repo/oss/boot/${p_arch}/loader",
     default             => 'No URL Specified',
-  }
   }
   
   $tld = $distro ?{
