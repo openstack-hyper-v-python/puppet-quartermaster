@@ -6,17 +6,11 @@
 
 class quartermaster::www {
   include 'apache'
-#  class {'apache':}
   apache::vhost {'quartermaster':
     priority   => '10',
     vhost_name => $::ipaddress,
-    port       => 80,
+    port       => $quartermaster::port,
     docroot    => $quartermaster::wwwroot,
-    logroot    => '/var/log/quartermaster/',
+    logroot    => $quartermaster::logroot,
   }
-
-#  file {'/var/log/quartermaster':
-#    ensure => directory,
-#  }
-
 }

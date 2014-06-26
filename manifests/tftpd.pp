@@ -38,8 +38,7 @@ TFTP_USERNAME=\"tftp\"
 TFTP_DIRECTORY=\"${quartermaster::tftpboot}\"
 TFTP_ADDRESS=\"0.0.0.0:69\"
 TFTP_OPTIONS=\"-vvvvs -c -m /etc/default/tftpd.rules\"
-#TFTP_OPTIONS=\"-vc -m /etc/default/tftpd.rules\"
-",
+#TFTP_OPTIONS=\"-vc -m /etc/default/tftpd.rules\"",
   }
 
   notify {'Creating tftp.rules file to support booting WinPE':}

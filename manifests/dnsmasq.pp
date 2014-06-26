@@ -12,7 +12,8 @@ class quartermaster::dnsmasq {
   package { 'dnsmasq':
     ensure => latest,
   }
-# Configure DNSMasq as ProxyDHCP
+  
+  # Configure DNSMasq as ProxyDHCP
   file {'quartermaster.conf':
     ensure  => file,
     path    => '/etc/dnsmasq.d/quartermaster.conf',
@@ -23,9 +24,6 @@ class quartermaster::dnsmasq {
 
   file {'/etc/logrotate.d/dnsmasq':
     ensure  => file,
-   # path    => '/etc/resolv.dnsmasq',
-    #content => template('quartermaster/dnsmasq.erb'),
-#    source => "",
     content => '/var/log/quartermaster/dnsmasq.log {
     monthly
     missingok

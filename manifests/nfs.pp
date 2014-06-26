@@ -25,7 +25,6 @@ class quartermaster::nfs {
     require => [ Package[ $nfs ], File [$quartermaster::wwwroot]],
   }
 
-
   notify {'Exporting Installation Directories via NFS':}
 
   file { 'nfsroot':
@@ -44,6 +43,7 @@ class quartermaster::nfs {
     mode    => '0755',
     require => [ Package[ $nfs ], File[ $quartermaster::nfsroot ]],
   }
+  
   file {"${quartermaster::nfsroot}/hardware":
     ensure  => 'directory',
     owner   => 'nobody',
@@ -51,6 +51,7 @@ class quartermaster::nfs {
     mode    => '0755',
     require => [ Package[ $nfs ], File[ $quartermaster::nfsroot ]],
   }
+  
   file {"${quartermaster::nfsroot}/hosts/pxefiles":
     ensure  => 'directory',
     owner   => 'nobody',
@@ -58,6 +59,7 @@ class quartermaster::nfs {
     mode    => '0755',
     require => [ Package[ $nfs ], File[ $quartermaster::nfsroot ]],
   }
+  
   file {"${quartermaster::nfsroot}/hosts/hiera":
     ensure  => 'directory',
     owner   => 'nobody',

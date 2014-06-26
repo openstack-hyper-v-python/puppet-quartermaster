@@ -3,18 +3,18 @@
 # This Class defines the creation of the linux pxe infrastructure
 #
 
-
 define quartermaster::pxe {
-# account for "."
+  # name must be in the format (distroName-release-arch), example: Ubuntu-Oneiric-AMD64
   if $name =~ /([a-zA-Z0-9_\.]+)-([a-zA-Z0-9_\.]+)-([a-zA-Z0-9_\.]+)/ {
-# works w/ no .
-#if $name =~ /([a-zA-Z0-9_]+)-([a-zA-Z0-9_]+)-([a-zA-Z0-9_]+)/ {
     $distro  = $1
-#    $rel_number = regsubst($2, '(\.)','','G')
     $release = $2
     $p_arch  = $3
   }
+  else {
+    notify { "Invalid formatting of name. ${name}":}
+  }
 
+  # remove periods from release (12.04 -> 1204)
   $rel_number = regsubst($release, '(\.)','','G')
 
   if $release =~/([0-9]+).([0-9])/{
@@ -48,12 +48,15 @@ define quartermaster::pxe {
     /(fedora)/   => 'true',
     default      => 'This is not fedora',  
   }
+  
   if ( $is_fedora == 'true') and ($release < 18) {
       $fedora_legacy = 'true'
   }
+  
   if ( $is_fedora == 'true') and ($release >= 18) {
       $fedora_legacy = 'false'
   }
+  
   if $is_fedora == 'true' {
      $fedora_url = $fedora_legacy ? {
       /(true)/   => "http://archives.fedoraproject.org/pub/archive",
@@ -84,10 +87,7 @@ define quartermaster::pxe {
   $url = $distro ? {
     /(ubuntu)/          => "http://archive.ubuntu.com/${distro}/dists/${rel_name}/main/installer-${p_arch}/current/images/netboot/${distro}-installer/${p_arch}",
     /(debian)/          => "http://ftp.debian.org/${distro}/dists/${rel_name}/main/installer-${p_arch}/current/images/netboot/${distro}-installer/${p_arch}",
-#    /(ubuntu|debian)/   => "http://${webhost}.${distro}.${tld}/${distro}/dists/${rel_name}/main/installer-${p_arch}/current/images/netboot/${distro}-installer/${p_arch}",
     /(centos)/          => "${centos_url}/os/${p_arch}/images/pxeboot",
-#    /(fedora)/          => "http://dl.fedoraproject.org/pub/${distro}/linux/releases/${release}/Fedora/${p_arch}/os/images/pxeboot",
-#    /(fedora)/          => "http://archives.fedoraproject.org/pub/${distro}/linux/releases/${release}/Fedora/${p_arch}/os/images/pxeboot",
     /(fedora)/          => "${fedora_url}/${distro}/linux/releases/${release}/Fedora/${p_arch}/os/images/pxeboot",
     /(scientificlinux)/  => "http://ftp.scientificlinux.org/linux/scientific/${release}/${p_arch}/os/images/pxeboot",
     /(oraclelinux)/     => "Enterprise ISO Required",
@@ -103,12 +103,12 @@ define quartermaster::pxe {
     /(debian)/ => 'org',
     default    => "tld isn't needed for ${distro}",   
   }
+  
   $webhost = $distro ?{
     /(ubuntu)/ => 'archive',
     /(debian)/ => 'ftp.us',
     default    => "webhost isn't needed for ${distro}",   
   }
-
 
   $inst_repo = $distro ? {
     /(ubuntu)/          => "http://archive.ubuntu.com/${distro}/dists/${rel_name}",
@@ -138,7 +138,6 @@ define quartermaster::pxe {
     default             => 'No URL Specified',
   }
 
-
   $splashurl = $distro ? {
     /(ubuntu)/         => "http://archive.ubuntu.com/${distro}/dists/${rel_name}/main/installer-${p_arch}/current/images/netboot/${distro}-installer/${p_arch}/boot-screens/splash.png",
     /(debian)/         => "http://ftp.debian.org/${distro}/dists/${rel_name}/main/installer-${p_arch}/current/images/netboot/${distro}-installer/${p_arch}/boot-screens/splash.png",
@@ -152,6 +151,7 @@ define quartermaster::pxe {
     /(opensuse)/        => "http://download.opensuse.org/distribution/${release}/repo/oss/boot/${p_arch}/loader/back.jpg",
     default             => 'No URL Specified',
   }
+  
   $bootsplash = $distro ? {
     /(ubuntu|debian|fedora|scientificlinux)/             => '.png',
     /(redhat|centos|opensuse|sles|sled)/                 => '.jpg',
@@ -159,7 +159,6 @@ define quartermaster::pxe {
     /(oraclelinux)/                                      => 'No Bootsplash ',
     default                                              => 'No Bootsplash',
   }
-
 
   $autofile = $distro ? {
     /(ubuntu|debian)/                                    => 'preseed',
@@ -182,21 +181,20 @@ define quartermaster::pxe {
     /(sles|sled|opensuse)/                               => '',
     default                                              => 'No supported Initrd Extension',
   }
+  
   $linux_installer = $distro ? {
     /(ubuntu|debian)/                                    => 'd-i',
     /(redhat|centos|fedora|scientificlinux|oraclelinux)/ => 'anaconda',
     /(sles|sled|opensuse)/                               => 'yast',
     default                                              => 'No Supported Installer',
   }
+  
   $puppetlabs_repo = $distro ? {
     /(ubuntu|debian)/                                    => "http://apt.puppetlabs.com/dists/${rel_name}",
     /(fedora)/                                           => "http://yum.puppetlabs.com/fedora/f${rel_number}/products/${p_arch}",
     /(redhat|centos|scientificlinux|oraclelinux)/        => "http://yum.puppetlabs.com/el/${rel_major}/products/${p_arch}",
     default                                              => 'No PuppetLabs Repo',
   }
-
-
-
 
   notify { "${name}: distro is ${distro}":}
   notify { "${name}: release is ${release}":}
@@ -216,7 +214,6 @@ define quartermaster::pxe {
   notify { "${name}: Fedora Legacy = ${fedora_legacy}":}
   notify { "${name}: Fedora URL = ${fedora_url}":}
   notify { "${name}: Oracle Distro = ${is_oracle}":}
-
 
   exec {"get_net_kernel-${name}":
     command => "/usr/bin/wget -c ${url}/${pxekernel} -O ${rel_number}",
@@ -239,15 +236,6 @@ define quartermaster::pxe {
     require =>  [ Class['quartermaster::squid_deb_proxy'], File[ "${quartermaster::tftpboot}/${distro}/graphics" ]],
   }
 
-#  exec {"create_submenu-${name}":
-#    command     => "${quartermaster::wwwroot}/bin/concatenate_files.sh ${quartermaster::tftpboot}/${distro}/menu ${quartermaster::tftpboot}/${distro}/${distro}.menu",
-#    cwd         => "${quartermaster::tftpboot}/${distro}/",
-#    creates     => "${quartermaster::tftpboot}/${distro}/${distro}.menu",
-#    notify      => Service[ 'tftpd-hpa' ],
-#    require     => File["${quartermaster::wwwroot}/bin/concatenate_files.sh"],
-#  }
-
-
   if ! defined (File["${quartermaster::tftpboot}/${distro}"]){
     file { "${quartermaster::tftpboot}/${distro}":
       ensure  => directory,
@@ -257,7 +245,6 @@ define quartermaster::pxe {
       require =>  File[$quartermaster::tftpboot],
     }
   }
-
 
   if ! defined (File["${quartermaster::tftpboot}/${distro}/menu"]){
     file { "${quartermaster::tftpboot}/${distro}/menu":
@@ -278,7 +265,8 @@ define quartermaster::pxe {
       require => File[ "${quartermaster::tftpboot}/${distro}" ],
     }
   }
-    file { "${name}.graphics.conf":
+  
+  file { "${name}.graphics.conf":
       ensure  => file,
       path    => "${quartermaster::tftpboot}/${distro}/menu/${name}.graphics.conf",
       owner   => 'tftp',
@@ -286,8 +274,7 @@ define quartermaster::pxe {
       mode    => '0644',
       require => File[ "${quartermaster::tftpboot}/${distro}/menu" ],
       content => template("quartermaster/pxemenu/${linux_installer}.graphics.erb"),
-   }
-
+  }
 
   if ! defined (File["${quartermaster::tftpboot}/${distro}/${p_arch}"]){
     file { "${quartermaster::tftpboot}/${distro}/${p_arch}":
@@ -319,6 +306,7 @@ define quartermaster::pxe {
       require => File[ $quartermaster::wwwroot ],
     }
   }
+  
   if ! defined (File["${quartermaster::wwwroot}/${distro}/${p_arch}"]) {
     file { "${quartermaster::wwwroot}/${distro}/${p_arch}":
       ensure  => directory,
@@ -329,6 +317,7 @@ define quartermaster::pxe {
       require => File[ $quartermaster::wwwroot ],
     }
   }
+  
   if ! defined (File["${quartermaster::wwwroot}/${distro}/ISO"]) {
     file { "${quartermaster::wwwroot}/${distro}/ISO":
       ensure  => directory,
@@ -339,8 +328,7 @@ define quartermaster::pxe {
       require => File[$quartermaster::wwwroot],
     }
   }
-
-
+  
   file { "${name}.${autofile}":
     ensure  => file,
     path    => "${quartermaster::wwwroot}/${distro}/${autofile}/${name}.${autofile}",
@@ -349,8 +337,7 @@ define quartermaster::pxe {
     mode    => '0644',
     content => template("quartermaster/autoinst/${autofile}.erb"),
     require => File[ "${quartermaster::wwwroot}/${distro}/${autofile}" ],
-  }
-
+   }
 
   if ! defined (Concat::Fragment["${distro}.default_menu_entry"]) {
     concat::fragment { "${distro}.default_menu_entry":
@@ -358,6 +345,7 @@ define quartermaster::pxe {
       content => template("quartermaster/pxemenu/default.erb"),
     }
   }
+  
   if ! defined (Concat["${quartermaster::tftpboot}/menu/${distro}.menu"]) {
     concat { "${quartermaster::tftpboot}/menu/${distro}.menu":
       owner   => 'tftp',
@@ -366,6 +354,7 @@ define quartermaster::pxe {
       notify => Service['tftpd-hpa'],
     }
   }
+  
   if ! defined (Concat::Fragment["${distro}.submenu_header"]) {
     concat::fragment {"${distro}.submenu_header":
       target  => "${quartermaster::tftpboot}/menu/${distro}.menu",
@@ -373,14 +362,13 @@ define quartermaster::pxe {
       order   => 01,
     }
   }
+  
   if ! defined (Concat::Fragment["${distro}${name}.menu_item"]) {
     concat::fragment {"${distro}.${name}.menu_item":
       target  => "${quartermaster::tftpboot}/menu/${distro}.menu",
       content => template("quartermaster/pxemenu/${linux_installer}.erb"),
     }
   }
-
-
 
   file { "${name}.menu":
     ensure  => file,

@@ -26,19 +26,23 @@
 #    quartermaster::windowsmedia{"en_windows_8_enterprise_x86_dvd_917587.iso": activationkey => "XXXXX-XXXXX-XXXXX-XXXXX-XXXXX"}
 # }
 #
-class quartermaster{
-  $tmp               = '/tmp'
-  $logroot           = '/var/log/quartermaster'
-  $tftpboot          = '/srv/tftpboot'
-  $wwwroot           = '/srv/install'
-  $nfsroot           = '/srv/nfs'
-  $bin               = "${wwwroot}/bin"
-  $puppetmaster_fqdn = "${fqdn}"
-  $exe_mode          = '0777'
-  $file_mode         = '0644'
-  $dir_mode          = '0755'
-  $counter           = '0'
-  $nameserver        = '4.2.2.2'
+
+class quartermaster (
+  $tmp               = $quartermaster::params::tmp,
+  $port              = $quartermaster::params::port,
+  $logroot           = $quartermaster::params::logroot,
+  $tftpboot          = $quartermaster::params::tftpboot,
+  $wwwroot           = $quartermaster::params::wwwroot,
+  $nfsroot           = $quartermaster::params::nfsroot,
+  $bin               = $quartermaster::params::bin,
+  $puppetmaster_fqdn = $quartermaster::params::puppetmaster_fqdn,
+  $exe_mode          = $quartermaster::params::exe_mode,
+  $file_mode         = $quartermaster::params::file_mode,
+  $dir_mode          = $quartermaster::params::dir_mode,
+  $counter           = $quartermaster::params::counter,
+  $nameserver        = $quartermaster::params::nameserver,
+) inherits quartermaster::params {
+  # load the image date from hiera
   $linux = hiera('linux',{})
   $windows = hiera('windows',{})
 
@@ -56,5 +60,4 @@ class quartermaster{
 
   quartermaster::pxe{$linux:}
   create_resources(quartermaster::windowsmedia,$windows)
-
 }

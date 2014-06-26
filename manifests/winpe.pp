@@ -6,10 +6,11 @@
 # ISO put in that directory will be automated and exported via
 # Samba and Apache
 #
-class quartermaster::winpe {
-$os           = "${quartermaster::wwwroot}/microsoft/mount"
-$windows_isos = "${quartermaster::wwwroot}/microsoft/iso"
 
+class quartermaster::winpe(
+   $os           = "${quartermaster::wwwroot}/microsoft/mount",
+   $windows_isos = "${quartermaster::wwwroot}/microsoft/iso",
+) {
 # Install WimLib
   apt::ppa {'ppa:nilarimogard/webupd8':}
 
