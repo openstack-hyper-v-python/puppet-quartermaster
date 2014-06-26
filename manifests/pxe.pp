@@ -191,26 +191,14 @@ define quartermaster::pxe {
     /(sles|sled|opensuse)/                               => '',
     default                                              => 'No supported Initrd Extension',
   }
-<<<<<<< HEAD
-  
-=======
-  }
-  
-  if $is_puppet == 'true' {
-    $linux_installer = 'custom'
-  } else {
->>>>>>> 5179679005d14ed285f7924be3471f7bed4feb1e
+
   $linux_installer = $distro ? {
     /(ubuntu|debian)/                                    => 'd-i',
     /(redhat|centos|fedora|scientificlinux|oraclelinux)/ => 'anaconda',
     /(sles|sled|opensuse)/                               => 'yast',
     default                                              => 'No Supported Installer',
   }
-<<<<<<< HEAD
-=======
-  }
->>>>>>> 5179679005d14ed285f7924be3471f7bed4feb1e
-  
+
   $puppetlabs_repo = $distro ? {
     /(ubuntu|debian)/                                    => "http://apt.puppetlabs.com/dists/${rel_name}",
     /(fedora)/                                           => "http://yum.puppetlabs.com/fedora/f${rel_number}/products/${p_arch}",
@@ -401,10 +389,7 @@ define quartermaster::pxe {
     }
   }
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 5179679005d14ed285f7924be3471f7bed4feb1e
   file { "${name}.menu":
     ensure  => file,
     path    => "${quartermaster::tftpboot}/${distro}/menu/${name}.menu",
