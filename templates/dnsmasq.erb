@@ -21,6 +21,6 @@ log-dhcp
 dhcp-range=<%= @ipaddress_eth0 %>,proxy
 <% end %>
 <% if "@ipaddress_eth1".length > 0 %>
-dhcp-range=<%= @ipaddress_eth1 %>,proxy
+dhcp-range=<%= "@ipaddress_eth1".length %>,proxy
 <% end %>
 pxe-service=x86PC, "Quartermaster PXE Provisioning", pxelinux/pxelinux, <%= @ipaddress %>
