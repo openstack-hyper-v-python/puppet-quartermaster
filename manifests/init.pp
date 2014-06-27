@@ -2,7 +2,19 @@
 #
 # This module manages quartermaster
 #
-# Parameters: none
+# Parameters:
+#    tmp                    Default temporary file directory
+#    port                   Access port for http (default: 80)
+#    logroot                Default log location
+#    tftpboot               Default tftp root directory
+#    wwwroot                Default www document root
+#    nfsroot                Default nfs document root
+#    bin                    Default binary directory
+#    puppetmaster_fqdn      Fully qualified domain name for puppetmaster (default: pull from environment)
+#    exe_mode               Permissions for executables (default: 777)
+#    file_mode              Permissions for non-executable files (default: 644)
+#    dir_mode               Permissions for directories (default: 755)
+#    nameserver             Default nameserver (4.2.2.2)
 #
 # Actions:
 #
@@ -41,7 +53,10 @@ class quartermaster (
   $dir_mode          = $quartermaster::params::dir_mode,
   $counter           = $quartermaster::params::counter,
   $nameserver        = $quartermaster::params::nameserver,
-) inherits quartermaster::params {
+) {
+
+  $counter                = '0',
+  
   # load the image date from hiera
   $linux = hiera('linux',{})
   $windows = hiera('windows',{})

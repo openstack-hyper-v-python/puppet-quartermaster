@@ -10,7 +10,6 @@ class quartermaster::syslinux {
   $pxe_menu      = "${quartermaster::tftpboot}/menu"
   #$syslinux_url  = 'http://mirrors.med.harvard.edu/linux/utils/boot/syslinux'
   $syslinux_url = 'http://www.kernel.org/pub/linux/utils/boot/syslinux'
-  #$syslinux_ver = '4.05'
   $syslinux_ver  = '5.01'
 #  $syslinux_ver  = '5.10'
 # Broken 
@@ -135,23 +134,23 @@ class quartermaster::syslinux {
     require => [ File[ $quartermaster::tftpboot ], Exec['get_syslinux']],
   }
 
-concat {"${pxecfg}/default":
+  concat {"${pxecfg}/default":
     owner   => 'tftp',
     group   => 'tftp',
     mode    => $quartermaster::file_mode,
     notify  => Service['tftpd-hpa'],
-}
+  }
 
-concat::fragment{"default_header":
+  concat::fragment{"default_header":
     target  => "${pxecfg}/default",
     content => template("quartermaster/pxemenu/header.erb"),
     order   => 01,
-}
-concat::fragment{"default_localboot":
+  }
+  concat::fragment{"default_localboot":
     target  => "${pxecfg}/default",
     content => template("quartermaster/pxemenu/localboot.erb"),
     order   => 01,
-}
+  }
 
 
   file {'graphics_cfg':

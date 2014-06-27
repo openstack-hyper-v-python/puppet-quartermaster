@@ -3,7 +3,6 @@
 # This Class and configures installs nfs on the quartermaster server
 #
 
-
 class quartermaster::nfs {
   $nfs = ['nfs-kernel-server',
         'nfs-client',

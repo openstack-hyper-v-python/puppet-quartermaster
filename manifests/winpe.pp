@@ -11,7 +11,7 @@ class quartermaster::winpe(
    $os           = "${quartermaster::wwwroot}/microsoft/mount",
    $windows_isos = "${quartermaster::wwwroot}/microsoft/iso",
 ) {
-# Install WimLib
+  # Install WimLib
   apt::ppa {'ppa:nilarimogard/webupd8':}
 
   package { 'wimtools':
@@ -19,8 +19,7 @@ class quartermaster::winpe(
     require => Apt::Ppa['ppa:nilarimogard/webupd8'],
   }
 
-
-# Samba Services for Hosing Windows Shares
+  # Samba Services for Hosing Windows Shares
   $samba = ['samba',
             'samba-client',
             'p7zip-full',
@@ -45,11 +44,11 @@ class quartermaster::winpe(
     require  => Package[ $samba ],
     content  => template('quartermaster/winpe/samba.erb'),
   }
-# Autofs For Automouting Windows iso's
+  
+  # Autofs For Automouting Windows iso's
   package { 'autofs5':
     ensure => latest,
   }
-
 
   service { 'autofs':
     ensure  => running,
@@ -67,6 +66,7 @@ class quartermaster::winpe(
     require => Package['autofs5'],
     notify  => Service['autofs'],
   }
+  
   file {'auto.quartermaster':
     ensure  => file,
     path    => '/etc/auto.quartermaster',
@@ -85,6 +85,7 @@ class quartermaster::winpe(
     mode    => $quartermaster::dir_mode,
     require => [ Package[ $samba ],File['samba.conf']],
   }
+  
   file { "${quartermaster::wwwroot}/microsoft":
     ensure  => directory,
     owner   => 'nobody',
@@ -92,6 +93,7 @@ class quartermaster::winpe(
     mode    => $quartermaster::dir_mode,
     require => [ Package[ $samba ],File['samba.conf']],
   }
+  
   file { "${quartermaster::wwwroot}/microsoft/winpe":
     ensure  => directory,
     owner   => 'nobody',
@@ -99,6 +101,7 @@ class quartermaster::winpe(
     mode    => $quartermaster::dir_mode,
     require => [ Package[ $samba ],File['samba.conf']],
   }
+  
   file { "${quartermaster::wwwroot}/microsoft/winpe/bin":
     ensure  => directory,
     owner   => 'nobody',
@@ -106,6 +109,7 @@ class quartermaster::winpe(
     mode    => $quartermaster::dir_mode,
     require => [ Package[ $samba ],File['samba.conf']],
   }
+  
   file { "${quartermaster::wwwroot}/microsoft/winpe/system":
     ensure  => directory,
     owner   => 'nobody',
@@ -113,6 +117,7 @@ class quartermaster::winpe(
     mode    => $quartermaster::dir_mode,
     require => [ Package[ $samba ],File['samba.conf']],
   }
+  
   file { "${quartermaster::wwwroot}/microsoft/winpe/system/menu":
     ensure  => directory,
     owner   => 'nobody',
@@ -120,6 +125,7 @@ class quartermaster::winpe(
     mode    => $quartermaster::dir_mode,
     require => [ Package[ $samba ],File['samba.conf']],
   }
+  
   file { "${quartermaster::wwwroot}/microsoft/iso":
     ensure  => directory,
     owner   => 'nobody',
@@ -128,6 +134,7 @@ class quartermaster::winpe(
     require => [ Package[ $samba ],File['samba.conf']],
     notify  => Service['autofs'],
   }
+  
   file { "${quartermaster::wwwroot}/microsoft/mount":
     ensure  => directory,
     owner   => 'nobody',
@@ -135,13 +142,7 @@ class quartermaster::winpe(
     mode    => $quartermaster::dir_mode,
     require => [ Package[ $samba ],File['samba.conf']],
   }
-#  file { "${quartermaster::wwwroot}/microsoft/winpe/unattend":
-#    ensure  => directory,
-#    owner   => 'nobody',
-#    group   => 'nogroup',
-#    mode    => $quartermaster::dir_mode,
-#    require => [ Package[ $samba ],File[ 'samba.conf' ]],
-#  }
+  
   file {"${quartermaster::tftpboot}/winpe":
     ensure  => directory,
     owner   => 'tftp',
@@ -150,16 +151,6 @@ class quartermaster::winpe(
     require => [File[ $quartermaster::tftpboot ], Package[ $samba ],File['samba.conf']],
   }
 
-#  file {'winpe_menu_default':
-#    ensure  => file,
-#    path    => "${quartermaster::tftpboot}/menu/winpe.menu",
-#    require => File["${quartermaster::tftpboot}/menu"],
-#    content => 'label winpe.menu
-#menu label Microsoft Installation Menu
-#kernel menu.c32
-#append ../winpe/winpe.menu
-#',
-#  }
   concat::fragment{"winpe_pxe_default_menu":
     target  => "${quartermaster::tftpboot}/pxelinux/pxelinux.cfg/default",
     content => template("quartermaster/pxemenu/winpe.erb"),
@@ -174,6 +165,7 @@ class quartermaster::winpe(
     content => template('quartermaster/winpe/menu/init.erb'),
     require => File["${quartermaster::wwwroot}/microsoft/winpe/system"],
   }
+  
   file { 'menucheck.ps1':
     ensure  => file,
     path    => "${quartermaster::wwwroot}/microsoft/winpe/system/menucheck.ps1",
@@ -183,6 +175,7 @@ class quartermaster::winpe(
     content => template('quartermaster/winpe/menu/menucheckps1.erb'),
     require => File["${quartermaster::wwwroot}/microsoft/winpe/system"],
   }
+  
   file { 'puppet_log.ps1':
     ensure  => file,
     path    => "${quartermaster::wwwroot}/microsoft/winpe/system/puppet_log.ps1",
@@ -192,6 +185,7 @@ class quartermaster::winpe(
     content => template('quartermaster/scripts/puppet_log.ps1.erb'),
     require => File["${quartermaster::wwwroot}/microsoft/winpe/system"],
   }
+  
   file { 'firstboot.cmd':
     ensure  => file,
     path    => "${quartermaster::wwwroot}/microsoft/winpe/system/firstboot.cmd",
@@ -201,6 +195,7 @@ class quartermaster::winpe(
     content => template('quartermaster/scripts/firstbootcmd.erb'),
     require => File["${quartermaster::wwwroot}/microsoft/winpe/system"],
   }
+  
   file { 'secondboot.cmd':
     ensure  => file,
     path    => "${quartermaster::wwwroot}/microsoft/winpe/system/secondboot.cmd",
@@ -210,6 +205,7 @@ class quartermaster::winpe(
     content => template('quartermaster/scripts/secondbootcmd.erb'),
     require => File["${quartermaster::wwwroot}/microsoft/winpe/system"],
   }
+  
   file { 'compute.cmd':
     ensure  => file,
     path    => "${quartermaster::wwwroot}/microsoft/winpe/system/compute.cmd",
@@ -219,6 +215,7 @@ class quartermaster::winpe(
     content => template('quartermaster/scripts/computecmd.erb'),
     require => File["${quartermaster::wwwroot}/microsoft/winpe/system"],
   }
+  
   file { 'puppetinit.cmd':
     ensure  => file,
     path    => "${quartermaster::wwwroot}/microsoft/winpe/system/puppetinit.cmd",
@@ -228,6 +225,7 @@ class quartermaster::winpe(
     content => template('quartermaster/scripts/puppetinitcmd.erb'),
     require => File["${quartermaster::wwwroot}/microsoft/winpe/system"],
   }
+  
   file { 'rename.ps1':
     ensure  => file,
     path    => "${quartermaster::wwwroot}/microsoft/winpe/system/rename.ps1",
@@ -237,68 +235,35 @@ class quartermaster::winpe(
     content => template('quartermaster/scripts/rename.ps1.erb'),
     require => File["${quartermaster::wwwroot}/microsoft/winpe/system"],
   }
-#  file { 'A00_init.cmd':
-#    ensure  => file,
-#    path    => "${quartermaster::wwwroot}/microsoft/winpe/system/menu/A00_init.cmd",
-#    owner   => 'nobody',
-#    group   => 'nogroup',
-#    mode    => $quartermaster::exe_mode,
-#    content => template('quartermaster/winpe/menu/A00_init.erb'),
-#    require => File["${quartermaster::wwwroot}/microsoft/winpe/system/menu"],
-#  }
-#  file { 'B00_init.cmd':
-#    ensure  => file,
-#    path    => "${quartermaster::wwwroot}/microsoft/winpe/system/menu/B00_init.cmd",
-#    owner   => 'nobody',
-#    group   => 'nogroup',
-#    mode    => $quartermaster::exe_mode,
-#    content => template('quartermaster/winpe/menu/B00_init.erb'),
-#    require => File["${quartermaster::wwwroot}/microsoft/winpe/system/menu"],
-#  }
-#  file { 'C00_init.cmd':
-#    ensure  => file,
-#    path    => "${quartermaster::wwwroot}/microsoft/winpe/system/menu/C00_init.cmd",
-#    owner   => 'nobody',
-#    group   => 'nogroup',
-#    mode    => $quartermaster::exe_mode,
-#    content => template('quartermaster/winpe/menu/C00_init.erb'),
-#    require => File["${quartermaster::wwwroot}/microsoft/winpe/system/menu"],
-#  }
-#  file { 'D00_init.cmd':
-##    ensure  => file,
-#    path    => "${quartermaster::wwwroot}/microsoft/winpe/system/menu/D00_init.cmd",
-#    owner   => 'nobody',
-#    group   => 'nogroup',
-#    mode    => $quartermaster::exe_mode,
-#    content => template('quartermaster/winpe/menu/D00_init.erb'),
-#    require => File["${quartermaster::wwwroot}/microsoft/winpe/system/menu"],
-#  }
 
-#Begin Winpe menu
+  #Begin Winpe menu
   concat { "${quartermaster::wwwroot}/microsoft/winpe/system/setup.cmd":
     owner   => 'nobody',
     group   => 'nogroup',
     mode    => $quartermaster::exe_mode,
   }
+  
   concat::fragment{"winpe_system_cmd_a00_header":
     target  => "${quartermaster::wwwroot}/microsoft/winpe/system/setup.cmd",
     content => template('quartermaster/winpe/menu/A00_init.erb'),
     order   => 01,
   }
+  
   concat::fragment{"winpe_system_cmd_b00_init":
     target  => "${quartermaster::wwwroot}/microsoft/winpe/system/setup.cmd",
     content => template('quartermaster/winpe/menu/B00_init.erb'),
     order   => 10,
   }
+  
   concat::fragment{"winpe_system_cmd_c00_init":
     target  => "${quartermaster::wwwroot}/microsoft/winpe/system/setup.cmd",
     content => template('quartermaster/winpe/menu/C00_init.erb'),
     order   => 20,
   }
+  
   concat::fragment{"winpe_menu_footer":
     target  => "${quartermaster::wwwroot}/microsoft/winpe/system/setup.cmd",
     content => template('quartermaster/winpe/menu/D00_init.erb'),
     order   => 99,
   }
-
 }

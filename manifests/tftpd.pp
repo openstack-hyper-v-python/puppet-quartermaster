@@ -57,6 +57,7 @@ TFTP_OPTIONS=\"-vvvvs -c -m /etc/default/tftpd.rules\"
     mode    => $quartermaster::dir_mode,
     require => [ Package[ 'tftpd-hpa' ],File[ tftpd_config ]],
   }
+  
   file { "${quartermaster::tftpboot}/menu":
     ensure  => directory,
     owner   => 'tftp',
@@ -64,6 +65,7 @@ TFTP_OPTIONS=\"-vvvvs -c -m /etc/default/tftpd.rules\"
     mode    => $quartermaster::dir_mode,
     require => [ Package[ 'tftpd-hpa' ],File[ tftpd_config ]],
   }
+  
   file { "${quartermaster::tftpboot}/pxelinux":
     ensure  => directory,
     owner   => 'tftp',
@@ -71,6 +73,7 @@ TFTP_OPTIONS=\"-vvvvs -c -m /etc/default/tftpd.rules\"
     mode    => $quartermaster::dir_mode,
     require => [ Package[ 'tftpd-hpa' ],File[ tftpd_config ]],
   }
+  
   file { "${quartermaster::tftpboot}/pxelinux/pxelinux.cfg":
     ensure  => directory,
     owner   => 'nobody',

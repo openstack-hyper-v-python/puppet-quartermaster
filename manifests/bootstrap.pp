@@ -1,3 +1,8 @@
+# Class: quartermaster::bootstrap
+#
+# This class applies the quartermaster node definition
+#
+
 class quartermaster::bootstrap {
   file { '/etc/puppet/manifests/site.pp':
     ensure => present,

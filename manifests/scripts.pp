@@ -5,7 +5,6 @@
 # automated installs
 #
 
-
 class quartermaster::scripts {
 
   include 'apache'
@@ -14,13 +13,11 @@ class quartermaster::scripts {
     ensure => directory,
   }
 
-
   file {'/etc/apache2/sites-available/default':
     ensure  => file,
     content => template('quartermaster/apache2.erb'),
     notify  => Service['apache2'],
   }
-
 
   file {"${quartermaster::wwwroot}/bin":
     ensure  => directory,
@@ -55,7 +52,6 @@ for FRAGMENT in `ls $1`; do
 done
 ',
   }
-
 
   exec { 'create_default_pxe_menu':
     command     => "${quartermaster::wwwroot}/bin/concatenate_files.sh ${quartermaster::tftpboot}/menu ${quartermaster::tftpboot}/pxelinux/pxelinux.cfg/default",

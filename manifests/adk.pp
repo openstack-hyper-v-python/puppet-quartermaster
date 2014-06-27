@@ -1,6 +1,6 @@
 # Class: petools::adk
 #
-# This retrieves the adk for winows and installs it
+# This retrieves the adk for windows and installs it
 # It also generates the winpe image and pxeboot files
 #
 
