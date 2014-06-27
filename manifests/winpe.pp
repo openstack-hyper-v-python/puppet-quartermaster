@@ -23,7 +23,6 @@ class quartermaster::winpe(
   $samba = ['samba',
             'samba-client',
             'p7zip-full',
-            'p7zip-rar',
             'dos2unix',
             'git',
             'git-review']

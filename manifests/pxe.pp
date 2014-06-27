@@ -189,7 +189,7 @@ define quartermaster::pxe {
     /(sles|sled|opensuse)/                               => 'yast',
     default                                              => 'No Supported Installer',
   }
-  
+
   $puppetlabs_repo = $distro ? {
     /(ubuntu|debian)/                                    => "http://apt.puppetlabs.com/dists/${rel_name}",
     /(fedora)/                                           => "http://yum.puppetlabs.com/fedora/f${rel_number}/products/${p_arch}",
