@@ -246,39 +246,31 @@ define quartermaster::pxe {
       }
   }
 
-  if ! defined (Tftp::File["${distro}"]){
     tftp::file { "${distro}":
       ensure  => directory,
       require =>  File[$quartermaster::tftpboot],
     }
-  }
 
-  if ! defined (Tftp::File["${distro}/menu"]){
     tftp::file { "${distro}/menu":
       ensure  => directory,
       require => Tftp::File["${distro}"],
     }
-  }
 
-  if ! defined (Tftp::File["${distro}/graphics"]){
     tftp::file { "${distro}/graphics":
       ensure  => directory,
       require => Tftp::File["${distro}"],
     }
-  }
-  
+
   tftp::file  { "${distro}/menu/${name}.graphics.conf":
       ensure  => file,
       require => Tftp::File[ ${distro}/menu" ],
       content => template("quartermaster/pxemenu/${linux_installer}.graphics.erb"),
   }
 
-  if ! defined (Tftp::File["${distro}/${p_arch}"]){
     tftp::file { "${distro}/${p_arch}":
       ensure  => directory,
       require => Tftp::File[ "${distro}" ],
     }
-  }
 
   if ! defined (File["${quartermaster::wwwroot}/${distro}"]) {
     file { "${quartermaster::wwwroot}/${distro}":
