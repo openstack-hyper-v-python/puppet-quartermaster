@@ -40,20 +40,20 @@
 #
 
 class quartermaster ( ) {
-  $tmp               = $quartermaster::params::tmp,
-  $port              = $quartermaster::params::port,
-  $logroot           = $quartermaster::params::logroot,
-  $tftpboot          = $quartermaster::params::tftpboot,
-  $wwwroot           = $quartermaster::params::wwwroot,
-  $nfsroot           = $quartermaster::params::nfsroot,
-  $bin               = $quartermaster::params::bin,
-  $puppetmaster_fqdn = $quartermaster::params::puppetmaster_fqdn,
-  $exe_mode          = $quartermaster::params::exe_mode,
-  $file_mode         = $quartermaster::params::file_mode,
-  $dir_mode          = $quartermaster::params::dir_mode,
-  $counter           = $quartermaster::params::counter,
-  $nameserver        = $quartermaster::params::nameserver,
-  $counter           = '0',
+  $tmp               = $quartermaster::params::tmp;
+  $port              = $quartermaster::params::port;
+  $logroot           = $quartermaster::params::logroot;
+  $tftpboot          = $quartermaster::params::tftpboot;
+  $wwwroot           = $quartermaster::params::wwwroot;
+  $nfsroot           = $quartermaster::params::nfsroot;
+  $bin               = $quartermaster::params::bin;
+  $puppetmaster_fqdn = $quartermaster::params::puppetmaster_fqdn;
+  $exe_mode          = $quartermaster::params::exe_mode;
+  $file_mode         = $quartermaster::params::file_mode;
+  $dir_mode          = $quartermaster::params::dir_mode;
+  $counter           = $quartermaster::params::counter;
+  $nameserver        = $quartermaster::params::nameserver;
+  $counter           = '0';
   
   # load the image date from hiera
   $linux = hiera('linux',{})
