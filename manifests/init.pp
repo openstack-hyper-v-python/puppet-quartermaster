@@ -39,7 +39,7 @@
 # }
 #
 
-class quartermaster (
+class quartermaster ( ) {
   $tmp               = $quartermaster::params::tmp,
   $port              = $quartermaster::params::port,
   $logroot           = $quartermaster::params::logroot,
@@ -54,7 +54,6 @@ class quartermaster (
   $counter           = $quartermaster::params::counter,
   $nameserver        = $quartermaster::params::nameserver,
   $counter           = '0',
-) {
   
   # load the image date from hiera
   $linux = hiera('linux',{})
