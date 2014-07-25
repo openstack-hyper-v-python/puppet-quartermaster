@@ -25,6 +25,7 @@ class quartermaster::tftpd {
      inetd     => false,
      directory => "${quartermaster::tftpboot}",
      options   => '-vvvvs -c -m /etc/default/tftpd.rules',
+     require   => [ Tftp::file[ "${quartermaster::tftpboot}/pxelinux/pxelinux.cfg" ], ],
   }
 
   notify {'Creating tftp.rules file to support booting WinPE':}
