@@ -142,10 +142,8 @@ class quartermaster::winpe(
     require => [ Package[ $samba ],File['samba.conf']],
   }
   
-  file {"${quartermaster::tftpboot}/winpe":
+  tftp::file {'winpe':
     ensure  => directory,
-    owner   => 'tftp',
-    group   => 'tftp',
     mode    => $quartermaster::exe_mode,
     require => [File[ $quartermaster::tftpboot ], Package[ $samba ],File['samba.conf']],
   }
