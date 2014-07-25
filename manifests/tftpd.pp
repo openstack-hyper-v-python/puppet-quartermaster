@@ -14,7 +14,7 @@
 
 class quartermaster::tftpd {
 
-  class tftp {
+  class{'tftp':
      directory => "${quartermaster::tftpboot}",
      address   => '0.0.0.0:69',
      options   => '-vvvvs -c -m /etc/default/tftpd.rules',
