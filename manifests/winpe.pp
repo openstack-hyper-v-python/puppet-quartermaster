@@ -77,7 +77,7 @@ class quartermaster::winpe(
     notify  => Service['autofs'],
   }
 
-  file { $quartermaster::wwwroot:
+  file { "${quartermaster::wwwroot}":
     ensure  => directory,
     owner   => 'nobody',
     group   => 'nogroup',
