@@ -361,7 +361,7 @@ define quartermaster::pxe {
       owner   => 'tftp',
       group   => 'tftp',
       mode    => $quartermaster::file_mode,
-      notify => Service['tftpd-hpa'],
+      require => Class['tftp'],
     }
   }
   
