@@ -14,9 +14,7 @@
 
 class quartermaster::tftpd {
 
-  file { "${quartermaster::tftpboot}":
-     ensure => directory,
-   }
+  include tftp
 
   class{ 'tftp':
      directory => "${quartermaster::tftpboot}",
