@@ -138,7 +138,7 @@ class quartermaster::syslinux {
     owner   => 'tftp',
     group   => 'tftp',
     mode    => $quartermaster::file_mode,
-    notify  => Service['tftpd-hpa'],
+    require  => Class['tftpd'],
   }
 
   concat::fragment{"default_header":
