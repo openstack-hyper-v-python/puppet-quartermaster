@@ -19,6 +19,7 @@ class quartermaster::tftpd {
   class{ 'tftp':
      directory => "${quartermaster::tftpboot}",
      options   => '-vvvvs -c -m /etc/default/tftpd.rules',
+     inetd     => false,
   }
 
   notify {'Creating tftp.rules file to support booting WinPE':}
