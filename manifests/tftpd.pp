@@ -30,8 +30,6 @@ class quartermaster::tftpd {
   notify {'Creating tftp.rules file to support booting WinPE':}
   tftp::file { '/etc/default/tftpd.rules':
     content  => template('quartermaster/winpe/tftp-remap.erb'),
-    notify   => Service[ 'tftpd-hpa' ],
-    require  => Package[ 'tftpd-hpa' ],
   }
   
   tftp::file { "${quartermaster::tftpboot}/menu":
