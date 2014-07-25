@@ -14,7 +14,6 @@
 
 class quartermaster::tftpd {
 
-  include tftp
   class{ 'tftp':
      inetd     => false,
      directory => "${quartermaster::tftpboot}",
