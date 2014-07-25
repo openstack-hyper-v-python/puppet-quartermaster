@@ -256,14 +256,14 @@ define quartermaster::pxe {
   if ! defined (Tftp::File["${distro}/menu"]){
     tftp::file { "${distro}/menu":
       ensure  => directory,
-      require => tftp::File["${distro}"],
+      require => Tftp::File["${distro}"],
     }
   }
 
   if ! defined (Tftp::File["${distro}/graphics"]){
     tftp::file { "${distro}/graphics":
       ensure  => directory,
-      require => tftp::File["${distro}"],
+      require => Tftp::File["${distro}"],
     }
   }
   
