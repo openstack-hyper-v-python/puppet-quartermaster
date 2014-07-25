@@ -34,15 +34,15 @@ class quartermaster::tftpd {
      require   => [ File[ 'tftpd_rules' ], ],
   }
   
-  tftp::file { "${quartermaster::tftpboot}/menu":
+  tftp::file { "menu":
     ensure  => directory,
   }
   
-  tftp::file { "${quartermaster::tftpboot}/pxelinux":
+  tftp::file { "pxelinux":
     ensure  => directory,
   }
   
-  tftp::file { "${quartermaster::tftpboot}/pxelinux/pxelinux.cfg":
+  tftp::file { "pxelinux/pxelinux.cfg":
     ensure  => directory,
     owner   => 'nobody',
     group   => 'nogroup',
