@@ -12,6 +12,7 @@ mod 'firewall', :git => "#{base_url}/puppetlabs/puppetlabs-firewall", :ref => 'm
 mod 'ntp', :git => "#{base_url}/puppetlabs/puppetlabs-ntp", :ref => 'master'
 mod 'apache', :git => "#{base_url}/puppetlabs/puppetlabs-apache", :ref => 'master'
 mod 'stdlib', :git => "#{base_url}/puppetlabs/puppetlabs-stdlib", :ref => 'master'
+mod 'tftp', :git => "#{base_url}/puppetlabs/puppetlabs-tftp", :ref => 'master'
 mod 'apt', :git => "#{base_url}/puppetlabs/puppetlabs-apt", :ref => 'master'
 mod 'inifile', :git => "#{base_url}/puppetlabs/puppetlabs-inifile", :ref => 'master'
 mod 'concat', :git => "#{base_url}/puppetlabs/puppetlabs-concat", :ref => 'master'
