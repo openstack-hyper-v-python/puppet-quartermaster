@@ -21,17 +21,17 @@ class quartermaster::tftpd {
     ensure  => directory,
   }
 
+  notify {'Creating tftp.rules file to support booting WinPE':}
+  file { 'tftpd_rules':
+    path     => '/etc/default/tftpd.rules',
+    content  => template('quartermaster/winpe/tftp-remap.erb'),
+  }
+
   class{ 'tftp':
      inetd     => false,
      directory => "${quartermaster::tftpboot}",
      options   => '-vvvvs -c -m /etc/default/tftpd.rules',
      require   => [ File[ 'tftpd_rules' ], ],
-  }
-
-  notify {'Creating tftp.rules file to support booting WinPE':}
-  file { 'tftpd_rules':
-    path     => '/etc/default/tftpd.rules',
-    content  => template('quartermaster/winpe/tftp-remap.erb'),
   }
   
   tftp::file { "${quartermaster::tftpboot}/menu":
