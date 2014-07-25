@@ -246,53 +246,37 @@ define quartermaster::pxe {
       }
   }
 
-  if ! defined (File["${quartermaster::tftpboot}/${distro}"]){
-    file { "${quartermaster::tftpboot}/${distro}":
+  if ! defined (Tftp::file["${distro}"]){
+    tftp::file { "${distro}":
       ensure  => directory,
-      owner   => 'tftp',
-      group   => 'tftp',
-      mode    => '0644',
       require =>  File[$quartermaster::tftpboot],
     }
   }
 
-  if ! defined (File["${quartermaster::tftpboot}/${distro}/menu"]){
-    file { "${quartermaster::tftpboot}/${distro}/menu":
+  if ! defined (Tftp::file["${distro}/menu"]){
+    tftp::file { "${distro}/menu":
       ensure  => directory,
-      owner   => 'tftp',
-      group   => 'tftp',
-      mode    => '0644',
-      require => File[ "${quartermaster::tftpboot}/${distro}" ],
+      require => Tftp::file["${distro}"],
     }
   }
 
-  if ! defined (File["${quartermaster::tftpboot}/${distro}/graphics"]){
-    file { "${quartermaster::tftpboot}/${distro}/graphics":
+  if ! defined (Tftp::file["${distro}/graphics"]){
+    tftp::file { "${distro}/graphics":
       ensure  => directory,
-      owner   => 'tftp',
-      group   => 'tftp',
-      mode    => '0644',
-      require => File[ "${quartermaster::tftpboot}/${distro}" ],
+      require => Tftp::file["${distro}"],
     }
   }
   
-  file { "${name}.graphics.conf":
+  tftp::file  { "${distro}/menu/${name}.graphics.conf":
       ensure  => file,
-      path    => "${quartermaster::tftpboot}/${distro}/menu/${name}.graphics.conf",
-      owner   => 'tftp',
-      group   => 'tftp',
-      mode    => '0644',
       require => File[ "${quartermaster::tftpboot}/${distro}/menu" ],
       content => template("quartermaster/pxemenu/${linux_installer}.graphics.erb"),
   }
 
-  if ! defined (File["${quartermaster::tftpboot}/${distro}/${p_arch}"]){
-    file { "${quartermaster::tftpboot}/${distro}/${p_arch}":
+  if ! defined (Tftp::file["${distro}/${p_arch}"]){
+    tftp::file { "${distro}/${p_arch}":
       ensure  => directory,
-      owner   => 'tftp',
-      group   => 'tftp',
-      mode    => '0644',
-      require => File[ "${quartermaster::tftpboot}/${distro}" ],
+      require => Tftp::file[ "${distro}" ],
     }
   }
 
@@ -380,13 +364,9 @@ define quartermaster::pxe {
     }
   }
 
-  file { "${name}.menu":
+  tftp::file { "${distro}/menu/${name}.menu":
     ensure  => file,
-    path    => "${quartermaster::tftpboot}/${distro}/menu/${name}.menu",
-    owner   => 'tftp',
-    group   => 'tftp',
-    mode    => '0644',
-    require => File[ "${quartermaster::tftpboot}/${distro}/menu" ],
+    require => Tftp::file[ "${distro}/menu" ],
     content => template("quartermaster/pxemenu/${linux_installer}.erb"),
   }
 }
