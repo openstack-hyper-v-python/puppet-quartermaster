@@ -220,21 +220,21 @@ define quartermaster::pxe {
     command => "/usr/bin/wget -c ${url}/${pxekernel} -O ${rel_number}",
     cwd     => "${quartermaster::tftpboot}/${distro}/${p_arch}",
     creates => "${quartermaster::tftpboot}/${distro}/${p_arch}/${rel_number}",
-    require =>  [Class['quartermaster::squid_deb_proxy'], File[ "${quartermaster::tftpboot}/${distro}/${p_arch}" ]],
+    require =>  [Class['quartermaster::squid_deb_proxy'], tftp::File[ "${distro}/${p_arch}" ]],
   }
 
   exec {"get_net_initrd-${name}":
     command => "/usr/bin/wget -c ${url}/initrd${initrd} -O ${rel_number}${initrd}",
     cwd     => "${quartermaster::tftpboot}/${distro}/${p_arch}",
     creates => "${quartermaster::tftpboot}/${distro}/${p_arch}/${rel_number}${initrd}",
-    require =>  [Class['quartermaster::squid_deb_proxy'], File[ "${quartermaster::tftpboot}/${distro}/${p_arch}" ]],
+    require =>  [Class['quartermaster::squid_deb_proxy'], tftp::File[ "${distro}/${p_arch}" ]],
   }
 
   exec {"get_bootsplash-${name}":
     command => "/usr/bin/wget -c ${splashurl}  -O ${name}${bootsplash}",
     cwd     => "${quartermaster::tftpboot}/${distro}/graphics",
     creates => "${quartermaster::tftpboot}/${distro}/graphics/${name}${bootsplash}",
-    require =>  [ Class['quartermaster::squid_deb_proxy'], File[ "${quartermaster::tftpboot}/${distro}/graphics" ]],
+    require =>  [ Class['quartermaster::squid_deb_proxy'], tftp::File[ "${distro}/graphics" ]],
   }
   
   if $is_puppet == 'true' {
@@ -242,41 +242,41 @@ define quartermaster::pxe {
         command => "/usr/bin/wget -c ${url}/filesystem.squashfs -O ${rel_number}.squashfs",                                                         
         cwd     => "${quartermaster::tftpboot}/${distro}/${p_arch}",
         creates => "${quartermaster::tftpboot}/${distro}/${p_arch}/${rel_number}.squashfs",
-        require =>  [Class['quartermaster::squid_deb_proxy'], File[ "${quartermaster::tftpboot}/${distro}/${p_arch}" ]],                                                                                                       
+        require =>  [Class['quartermaster::squid_deb_proxy'], tftp::File[ "${distro}/${p_arch}" ]],                                                                                                       
       }
   }
 
-  if ! defined (Tftp::File["${distro}"]){
+  if ! defined (tftp::File["${distro}"]){
     tftp::file { "${distro}":
       ensure  => directory,
       require =>  File[$quartermaster::tftpboot],
     }
   }
 
-  if ! defined (Tftp::File["${distro}/menu"]){
+  if ! defined (tftp::File["${distro}/menu"]){
     tftp::file { "${distro}/menu":
       ensure  => directory,
-      require => Tftp::File["${distro}"],
+      require => tftp::File["${distro}"],
     }
   }
 
-  if ! defined (Tftp::File["${distro}/graphics"]){
+  if ! defined (tftp::File["${distro}/graphics"]){
     tftp::file { "${distro}/graphics":
       ensure  => directory,
-      require => Tftp::file["${distro}"],
+      require => tftp::File["${distro}"],
     }
   }
   
   tftp::file  { "${distro}/menu/${name}.graphics.conf":
       ensure  => file,
-      require => File[ "${quartermaster::tftpboot}/${distro}/menu" ],
+      require => tftp::File[ ${distro}/menu" ],
       content => template("quartermaster/pxemenu/${linux_installer}.graphics.erb"),
   }
 
-  if ! defined (Tftp::file["${distro}/${p_arch}"]){
+  if ! defined (tftp::File["${distro}/${p_arch}"]){
     tftp::file { "${distro}/${p_arch}":
       ensure  => directory,
-      require => Tftp::file[ "${distro}" ],
+      require => tftp::File[ "${distro}" ],
     }
   }
 
@@ -366,7 +366,7 @@ define quartermaster::pxe {
 
   tftp::file { "${distro}/menu/${name}.menu":
     ensure  => file,
-    require => Tftp::file[ "${distro}/menu" ],
+    require => tftp::File[ "${distro}/menu" ],
     content => template("quartermaster/pxemenu/${linux_installer}.erb"),
   }
 }
