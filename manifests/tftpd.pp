@@ -17,9 +17,9 @@ class quartermaster::tftpd {
   include tftp
 
   class{ 'tftp':
+     inetd     => false,
      directory => "${quartermaster::tftpboot}",
      options   => '-vvvvs -c -m /etc/default/tftpd.rules',
-     inetd     => false,
   }
 
   notify {'Creating tftp.rules file to support booting WinPE':}
@@ -27,10 +27,6 @@ class quartermaster::tftpd {
     content  => template('quartermaster/winpe/tftp-remap.erb'),
     notify   => Service[ 'tftpd-hpa' ],
     require  => Package[ 'tftpd-hpa' ],
-  }
-
-  tftp::file { "${quartermaster::tftpboot}":
-    ensure  => directory,
   }
   
   tftp::file { "${quartermaster::tftpboot}/menu":
