@@ -263,7 +263,7 @@ define quartermaster::pxe {
 
   tftp::file  { "${distro}/menu/${name}.graphics.conf":
       ensure  => file,
-      require => Tftp::File[ ${distro}/menu" ],
+      require => Tftp::File[ "${distro}/menu" ],
       content => template("quartermaster/pxemenu/${linux_installer}.graphics.erb"),
   }
 
