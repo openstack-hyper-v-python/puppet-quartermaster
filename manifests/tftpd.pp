@@ -14,6 +14,13 @@
 
 class quartermaster::tftpd {
 
+  file { "${quartermaster::tftpboot}":
+    owner   => 'tftp',
+    group   => 'tftp',
+    mode    => $quartermaster::dir_mode,
+    ensure  => directory,
+  }
+
   class{ 'tftp':
      inetd     => false,
      directory => "${quartermaster::tftpboot}",
