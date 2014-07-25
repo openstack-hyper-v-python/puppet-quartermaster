@@ -53,9 +53,8 @@ class quartermaster (
   $dir_mode          = $quartermaster::params::dir_mode,
   $counter           = $quartermaster::params::counter,
   $nameserver        = $quartermaster::params::nameserver,
+  $counter           = '0',
 ) {
-
-  $counter                = '0',
   
   # load the image date from hiera
   $linux = hiera('linux',{})
