@@ -81,7 +81,6 @@ define quartermaster::pxe {
     /(stable)/   => 'squeeze',
     /(testing)/  => 'wheezy',
     /(unstable)/ => 'sid',
-    /(puppet)/   => 'wheezy',
     default      => "Unsupported ${distro} Release",
   }
 
@@ -236,41 +235,40 @@ define quartermaster::pxe {
     creates => "${quartermaster::tftpboot}/${distro}/graphics/${name}${bootsplash}",
     require =>  [ Class['quartermaster::squid_deb_proxy'], Tftp::File[ "${distro}/graphics" ]],
   }
-  
-  if $is_puppet == 'true' {
-      exec { "download_puppet_filesystem":                                                                                                                     
-        command => "/usr/bin/wget -c ${url}/filesystem.squashfs -O ${rel_number}.squashfs",                                                         
-        cwd     => "${quartermaster::tftpboot}/${distro}/${p_arch}",
-        creates => "${quartermaster::tftpboot}/${distro}/${p_arch}/${rel_number}.squashfs",
-        require =>  [Class['quartermaster::squid_deb_proxy'], Tftp::File[ "${distro}/${p_arch}" ]],                                                                                                       
-      }
-  }
 
+  if ! defined (Tftp::File["${distro}"]){
     tftp::file { "${distro}":
       ensure  => directory,
       require =>  File[$quartermaster::tftpboot],
     }
+  }
 
+  if ! defined (Tftp::File["${distro}/menu"]){
     tftp::file { "${distro}/menu":
       ensure  => directory,
       require => Tftp::File["${distro}"],
     }
+  }
 
+  if ! defined (Tftp::File["${distro}/graphics"]){
     tftp::file { "${distro}/graphics":
       ensure  => directory,
       require => Tftp::File["${distro}"],
     }
-
+  }
+  
   tftp::file  { "${distro}/menu/${name}.graphics.conf":
       ensure  => file,
       require => Tftp::File[ "${distro}/menu" ],
       content => template("quartermaster/pxemenu/${linux_installer}.graphics.erb"),
   }
 
+  if ! defined (Tftp::File["${distro}/${p_arch}"]){
     tftp::file { "${distro}/${p_arch}":
       ensure  => directory,
       require => Tftp::File[ "${distro}" ],
     }
+  }
 
   if ! defined (File["${quartermaster::wwwroot}/${distro}"]) {
     file { "${quartermaster::wwwroot}/${distro}":
