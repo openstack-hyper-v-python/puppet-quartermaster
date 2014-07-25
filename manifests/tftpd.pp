@@ -50,7 +50,7 @@ TFTP_OPTIONS=\"-vvvvs -c -m /etc/default/tftpd.rules\"
     require  => Package[ 'tftpd-hpa' ],
   }
 
-  file { $quartermaster::tftpboot:
+  file { "${quartermaster::tftpboot}":
     ensure  => directory,
     owner   => 'tftp',
     group   => 'tftp',
