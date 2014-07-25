@@ -58,8 +58,7 @@ done
     cwd         => "${quartermaster::tftpboot}/pxelinux/pxelinux.cfg/",
     creates     => "${quartermaster::tftpboot}/pxelinux/pxelinux.cfg/default",
     refreshonly => true,
-    notify      => Service[ 'tftpd-hpa' ],
-    require     => File["${quartermaster::wwwroot}/bin/concatenate_files.sh"],
+    require     => [Class['tftp'], File["${quartermaster::wwwroot}/bin/concatenate_files.sh"],],
   }
 
   file {'firstboot.sh':
