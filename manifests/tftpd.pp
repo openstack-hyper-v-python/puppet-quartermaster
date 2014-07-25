@@ -14,7 +14,7 @@
 
 class quartermaster::tftpd {
 
-  include puppetlabs-tftp
+  include tftp
 
   class{ 'tftp':
      directory => "${quartermaster::tftpboot}",
