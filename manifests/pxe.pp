@@ -11,112 +11,36 @@ define quartermaster::pxe {
     $p_arch  = $3
   }
   else {
-    notify { "Invalid formatting of name. ${name}":}
+    fail("Invalid formatting of name. ${name}")
   }
- 
-  # set up the menu
-  quartermaster::pxe::installer{ "${distro}-${release}-${p_arch}":
-  	 distro    => $distro,
-	 release   => $rel_number,
-     p_arch    => $p_arch,
+  
+  # convert debian/ubuntu release to correct naming for URL
+  $rel_name = $release ? {
+     /(11.04)/    => 'natty',
+     /(11.10)/    => 'oneric',
+     /(12.04)/    => 'precise',
+     /(12.10)/    => 'quantal',
+     /(13.04)/    => 'raring',
+     /(13.10)/    => 'saucy',
+     /(14.04)/    => 'trusty',
+     /(stable)/   => 'squeeze',
+     /(testing)/  => 'wheezy',
+     /(unstable)/ => 'sid',
+     default      => "Unsupported ${distro} Release",
   }
   
   # remove periods from release (12.04 -> 1204)
-  $rel_number = regsubst($release, '(\.)','','G')
-
-  if $release =~/([0-9]+).([0-9])/{
-    $rel_major = $1
-    $rel_minor = $2
-  }
-
-  # Begin Tests to deal with centos point release issues
-  $is_centos = $distro ? {
-    /(centos)/   => 'true',
-    default      => 'This is not centos',  
-  }
-
-  if $is_centos == 'true' {
-   $centos_legacy = $rel_minor ? {
-      /(0|1|2|3)/ => 'true',
-      /(4)/       => 'false',
-      default	=> 'This is not a EL Distro',
-    }
-  }
-
-  if $is_centos == 'true' {
-     $centos_url = $centos_legacy ? {
-      /(true)/   => "http://vault.centos.org/${release}",
-      /(false)/  => "http://mirror.centos.org/centos/${rel_major}",
-    }
-  }
-
-  # Tests to determine fedora versioning to enable proper download repos
-  $is_fedora = $distro ? {
-    /(fedora)/   => 'true',
-    default      => 'This is not fedora',  
+  $rel_num = regsubst($release, '(\.)','','G')
+  
+  # download the kernel and ramdisk
+  quartermaster::pxe::installer{ "${distro}-${release}-${p_arch}":
+  	 distro    => $distro,
+     p_arch    => $p_arch,
+	 release   => $release,
+	 rel_name  => $rel_name,
+	 rel_num   => $rel_num,
   }
   
-  if ( $is_fedora == 'true') and ($release < 18) {
-      $fedora_legacy = 'true'
-  }
-  
-  if ( $is_fedora == 'true') and ($release >= 18) {
-      $fedora_legacy = 'false'
-  }
-  
-  if $is_fedora == 'true' {
-     $fedora_url = $fedora_legacy ? {
-      /(true)/   => "http://archives.fedoraproject.org/pub/archive",
-      /(false)/  => "http://dl.fedoraproject.org/pub",
-    }
-  }
-
-  # Begin tests for dealing with OracleLinux Repos
-  $is_oracle = $distro ? {
-    /(oraclelinux)/ => 'true',
-    default         => 'This is not Oracle Linux',  
-  }
-
-  $rel_name = $release ? {
-    /(11.04)/    => 'natty',
-    /(11.10)/    => 'oneric',
-    /(12.04)/    => 'precise',
-    /(12.10)/    => 'quantal',
-    /(13.04)/    => 'raring',
-    /(13.10)/    => 'saucy',
-    /(14.04)/    => 'trusty',
-    /(stable)/   => 'squeeze',
-    /(testing)/  => 'wheezy',
-    /(unstable)/ => 'sid',
-    default      => "Unsupported ${distro} Release",
-  }
-
-  $url = $distro ? {
-    /(ubuntu)/          => "http://archive.ubuntu.com/${distro}/dists/${rel_name}/main/installer-${p_arch}/current/images/netboot/${distro}-installer/${p_arch}",
-    /(debian)/          => "http://ftp.debian.org/${distro}/dists/${rel_name}/main/installer-${p_arch}/current/images/netboot/${distro}-installer/${p_arch}",
-    /(centos)/          => "${centos_url}/os/${p_arch}/images/pxeboot",
-    /(fedora)/          => "${fedora_url}/${distro}/linux/releases/${release}/Fedora/${p_arch}/os/images/pxeboot",
-    /(scientificlinux)/  => "http://ftp.scientificlinux.org/linux/scientific/${release}/${p_arch}/os/images/pxeboot",
-    /(oraclelinux)/     => "Enterprise ISO Required",
-    /(redhat)/          => 'Enterprise ISO Required',
-    /(sles)/            => 'Enterprise ISO Required',
-    /(sled)/            => 'Enterprise ISO Required',
-    /(opensuse)/        => "http://download.opensuse.org/distribution/${release}/repo/oss/boot/${p_arch}/loader",
-    default             => 'No URL Specified',
-  }
-  
-  $tld = $distro ?{
-    /(ubuntu)/ => 'com',
-    /(debian)/ => 'org',
-    default    => "tld isn't needed for ${distro}",   
-  }
-  
-  $webhost = $distro ?{
-    /(ubuntu)/ => 'archive',
-    /(debian)/ => 'ftp.us',
-    default    => "webhost isn't needed for ${distro}",   
-  }
-
   $inst_repo = $distro ? {
     /(ubuntu)/          => "http://archive.ubuntu.com/${distro}/dists/${rel_name}",
     /(debian)/          => "http://ftp.debian.org/${distro}/dists/${rel_name}",
@@ -145,48 +69,12 @@ define quartermaster::pxe {
     default             => 'No URL Specified',
   }
 
-  $splashurl = $distro ? {
-    /(ubuntu)/         => "http://archive.ubuntu.com/${distro}/dists/${rel_name}/main/installer-${p_arch}/current/images/netboot/${distro}-installer/${p_arch}/boot-screens/splash.png",
-    /(debian)/         => "http://ftp.debian.org/${distro}/dists/${rel_name}/main/installer-${p_arch}/current/images/netboot/${distro}-installer/${p_arch}/boot-screens/splash.png",
-    /(redhat)/          => 'Enterprise ISO Required',
-    /(centos)/          => "${centos_url}/os/${p_arch}/isolinux/splash.jpg",
-    /(fedora)/          => "${fedora_url}/${distro}/linux/releases/${release}/Fedora/${p_arch}/os/isolinux/splash.png",
-    /(scientificlinux)/ => "http://ftp.scientificlinux.org/linux/scientific/${release}/${p_arch}/os/isolinux/splash.jpg",
-    /(oraclelinux)/     => "http://public-yum.oracle.com/repo/OracleLinux/OL${rel_major}/${rel_minor}/base/${p_arch}/",
-    /(sles)/            => 'Enterprise ISO Required',
-    /(sled)/            => 'Enterprise ISO Required',
-    /(opensuse)/        => "http://download.opensuse.org/distribution/${release}/repo/oss/boot/${p_arch}/loader/back.jpg",
-    default             => 'No URL Specified',
-  }
-  
-  $bootsplash = $distro ? {
-    /(ubuntu|debian|fedora|scientificlinux)/             => '.png',
-    /(redhat|centos|opensuse|sles|sled)/                 => '.jpg',
-    /(windows)/                                          => 'No Bootsplash',
-    /(oraclelinux)/                                      => 'No Bootsplash ',
-    default                                              => 'No Bootsplash',
-  }
-
   $autofile = $distro ? {
     /(ubuntu|debian)/                                    => 'preseed',
     /(redhat|centos|fedora|scientificlinux|oraclelinux)/ => 'kickstart',
     /(sles|sled|opensuse)/                               => 'autoyast',
     /(windows)/                                          => 'unattend.xml',
     default                                              => 'No supported automated installation method',
-  }
-
-  $pxekernel = $distro ? {
-    /(ubuntu|debian)/                                    => 'linux',
-    /(redhat|centos|fedora|scientificlinux|oraclelinux)/ => 'vmlinuz',
-    /(sles|sled|opensuse)/                               => 'linux',
-    default                                              => 'No supported Pxe Kernel',
-  }
-
-  $initrd = $distro ? {
-    /(ubuntu|debian)/                                    => '.gz',
-    /(redhat|centos|fedora|scientificlinux|oraclelinux)/ => '.img',
-    /(sles|sled|opensuse)/                               => '',
-    default                                              => 'No supported Initrd Extension',
   }
 
   $linux_installer = $distro ? {
@@ -203,46 +91,7 @@ define quartermaster::pxe {
     default                                              => 'No PuppetLabs Repo',
   }
 
-  notify { "${name}: distro is ${distro}":}
-  notify { "${name}: release is ${release}":}
-  notify { "${name}: rel_major is ${rel_major}":}
-  notify { "${name}: rel_minor is ${rel_minor}":}
-  notify { "${name}: p_arch is  ${p_arch}":}
-  notify { "${name}: url is ${url}":}
-  notify { "${name}: inst_repo is ${inst_repo}":}
-  notify { "${name}: kernel is ${pxekernel}":}
-  notify { "${name}: initrd is ${initrd}":}
-  notify { "${name}: linux_installer is ${linux_installer}":}
-  notify { "${name}: PuppetLabs Repo is ${puppetlabs_repo}":}
-  notify { "${name}: Centos Distro = ${is_centos}":}
-  notify { "${name}: Centos Legacy = ${centos_legacy}":}
-  notify { "${name}: Centos URL = ${centos_url}":}
-  notify { "${name}: Fedora Distro = ${is_fedora}":}
-  notify { "${name}: Fedora Legacy = ${fedora_legacy}":}
-  notify { "${name}: Fedora URL = ${fedora_url}":}
-  notify { "${name}: Oracle Distro = ${is_oracle}":}
-
-  exec {"get_net_kernel-${name}":
-    command => "/usr/bin/wget -c ${url}/${pxekernel} -O ${rel_number}",
-    cwd     => "${quartermaster::tftpboot}/${distro}/${p_arch}",
-    creates => "${quartermaster::tftpboot}/${distro}/${p_arch}/${rel_number}",
-    require =>  [Class['quartermaster::squid_deb_proxy'], Tftp::File[ "${distro}/${p_arch}" ]],
-  }
-
-  exec {"get_net_initrd-${name}":
-    command => "/usr/bin/wget -c ${url}/initrd${initrd} -O ${rel_number}${initrd}",
-    cwd     => "${quartermaster::tftpboot}/${distro}/${p_arch}",
-    creates => "${quartermaster::tftpboot}/${distro}/${p_arch}/${rel_number}${initrd}",
-    require =>  [Class['quartermaster::squid_deb_proxy'], Tftp::File[ "${distro}/${p_arch}" ]],
-  }
-
-  exec {"get_bootsplash-${name}":
-    command => "/usr/bin/wget -c ${splashurl}  -O ${name}${bootsplash}",
-    cwd     => "${quartermaster::tftpboot}/${distro}/graphics",
-    creates => "${quartermaster::tftpboot}/${distro}/graphics/${name}${bootsplash}",
-    require =>  [ Class['quartermaster::squid_deb_proxy'], Tftp::File[ "${distro}/graphics" ]],
-  }
-
+  # create directory structure
   if ! defined (Tftp::File["${distro}"]){
     tftp::file { "${distro}":
       ensure  => directory,

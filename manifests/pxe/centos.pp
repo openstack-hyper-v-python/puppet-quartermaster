@@ -4,6 +4,8 @@ define quartermaster::pxe::centos (
    $distro,
    $p_arch,
    $release,
+   $rel_name,
+   $rel_num
 ) {
    if $distro == "scientificlinux" {
    	  $target = "${p_arch}/os/images/pxeboot"
@@ -25,9 +27,6 @@ define quartermaster::pxe::centos (
 		 /(false)/  => "http://mirror.centos.org/centos/${rel_major}",
 	  }
    }
-   
-   # remove periods from release (6.5 -> 65)
-   $rel_num = regsubst($release, '(\.)','','G')
 	   
    # Note: we can use the kernel.org mirror to limit the needed classes
    $url = $(baseurl)/${target}

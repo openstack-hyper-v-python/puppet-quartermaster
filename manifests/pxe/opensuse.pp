@@ -4,12 +4,11 @@ define quartermaster::pxe::opensuse (
    $distro,
    $p_arch,
    $release,
+   $rel_name,
+   $rel_num
 ) {
    $target = "repo/oss/boot/${p_arch}/loader"
    $baseurl = "http://download.opensuse.org/distribution/${release}"
-   
-   # remove periods from release (6.5 -> 65)
-   $rel_num = regsubst($release, '(\.)','','G')
 	   
    # Note: we can use the kernel.org mirror to limit the needed classes
    $url = $(baseurl)/${target}

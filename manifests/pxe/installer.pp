@@ -1,9 +1,14 @@
-# Setup an entry in the pxe boot options
+# Class: quartermaster::pxe::installer
+# 
+# This class helps to break apart logical issues for each distro
+#
 
 define quartermaster::pxe::installer (
    $distro,
    $p_arch,
    $release,
+   $rel_name,
+   $rel_num,
 ) {
    case $distro {
       ubuntu,debian: {
@@ -11,13 +16,17 @@ define quartermaster::pxe::installer (
 		    distro    => $distro,
 		    p_arch    => $p_arch,
 			release   => $release,
+			rel_name  => $rel_name,
+			rel_num   => $rel_num,
 		 }
 	  }
-	  centos: {
+	  centos,scientificlinux: {
 	     quartermaster::pxe:centos { "${distro}-${release}-${p_arch}":
 		    distro    => $distro,
 		    p_arch    => $p_arch,
 			release   => $release,
+			rel_name  => $rel_name,
+			rel_num   => $rel_num,
 		 }
 	  }
 	  fedora: {
@@ -25,13 +34,8 @@ define quartermaster::pxe::installer (
 		    distro    => $distro,
 		    p_arch    => $p_arch,
 			release   => $release,
-		 }
-	  }
-	  scientificlinux: {
-	     quartermaster::pxe:centos { "${distro}-${release}-${p_arch}":
-		    distro    => $distro,
-		    p_arch    => $p_arch,
-			release   => $release,
+			rel_name  => $rel_name,
+			rel_num   => $rel_num,
 		 }
 	  }
 	  sles,sled: {
@@ -39,6 +43,8 @@ define quartermaster::pxe::installer (
 		 	distro    => $distro,
 		    p_arch    => $p_arch,
 			release   => $release,
+			rel_name  => $rel_name,
+			rel_num   => $rel_num,
 		 }
 	  }
 	  redhat: {
@@ -46,6 +52,8 @@ define quartermaster::pxe::installer (
 		 	distro    => $distro,
 		    p_arch    => $p_arch,
 			release   => $release,
+			rel_name  => $rel_name,
+			rel_num   => $rel_num,
 		 }
 	  }
 	  opensuse: {
@@ -53,6 +61,8 @@ define quartermaster::pxe::installer (
 		 	distro    => $distro,
 		    p_arch    => $p_arch,
 			release   => $release,
+			rel_name  => $rel_name,
+			rel_num   => $rel_num,
 		 }
 	  }
 	  oraclelinux: {
@@ -60,7 +70,12 @@ define quartermaster::pxe::installer (
 		 	distro    => $distro,
 		    p_arch    => $p_arch,
 			release   => $release,
+			rel_name  => $rel_name,
+			rel_num   => $rel_num,
 		 }
+	  }
+	  default: {
+	     fail("$(distro) is not configured for pxe boot!")
 	  }
    }
 }

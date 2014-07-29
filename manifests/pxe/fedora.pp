@@ -4,6 +4,8 @@ define quartermaster::pxe::fedora (
    $distro,
    $p_arch,
    $release,
+   $rel_name,
+   $rel_num
 ) {
    if ($release < 18) {
       $legacy = 'true'
