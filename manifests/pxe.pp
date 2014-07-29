@@ -13,7 +13,14 @@ define quartermaster::pxe {
   else {
     notify { "Invalid formatting of name. ${name}":}
   }
-
+ 
+  # set up the menu
+  quartermaster::pxe::installer{ "${distro}-${release}-${p_arch}":
+  	 distro    => $distro,
+	 release   => $rel_number,
+     p_arch    => $p_arch,
+  }
+  
   # remove periods from release (12.04 -> 1204)
   $rel_number = regsubst($release, '(\.)','','G')
 
