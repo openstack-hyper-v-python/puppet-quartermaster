@@ -4,7 +4,6 @@ define quartermaster::pxe::opensuse (
    $distro,
    $p_arch,
    $release,
-   $rel_name,
    $rel_num
 ) {
    $target = "repo/oss/boot/${p_arch}/loader"
