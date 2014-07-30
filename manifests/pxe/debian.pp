@@ -51,7 +51,7 @@ define quartermaster::pxe::debian (
       distro          => $distro,
 	  p_arch          => $p_arch,
 	  linux_installer => 'd-i',
-	  autofile        => $'preseed',
+	  autofile        => 'preseed',
 	  puppetlabs_repo => "http://apt.puppetlabs.com/dists/${rel_name}",
 	  inst_repo       => "${baseurl}/${rel_name}",
 	  update_repo     => "${baseurl}/${rel_name}"

@@ -21,7 +21,7 @@ define quartermaster::pxe::fedora (
    
    # Get the kernel
    exec {"get_net_kernel-${name}":
-     command => "/usr/bin/wget -c ${url}/linux -O ${rel_num}",
+     command => "/usr/bin/wget -c ${url}/vmlinuz -O ${rel_num}",
      cwd     => "${quartermaster::tftpboot}/${distro}/${p_arch}",
      creates => "${quartermaster::tftpboot}/${distro}/${p_arch}/${rel_num}",
      require =>  [Class['quartermaster::squid_deb_proxy'], Tftp::File[ "${distro}/${p_arch}" ]],
@@ -29,9 +29,9 @@ define quartermaster::pxe::fedora (
 
    # Get the ramdisk
    exec {"get_net_initrd-${name}":
-     command => "/usr/bin/wget -c ${url}/initrd.gz -O ${rel_num}.gz",
+     command => "/usr/bin/wget -c ${url}/initrd.img -O ${rel_num}.img",
      cwd     => "${quartermaster::tftpboot}/${distro}/${p_arch}",
-     creates => "${quartermaster::tftpboot}/${distro}/${p_arch}/${rel_num}.gz",
+     creates => "${quartermaster::tftpboot}/${distro}/${p_arch}/${rel_num}.img",
      require =>  [Class['quartermaster::squid_deb_proxy'], Tftp::File[ "${distro}/${p_arch}" ]],
    }
 
