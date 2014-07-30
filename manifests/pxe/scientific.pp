@@ -17,7 +17,7 @@ define quartermaster::pxe::scientific (
    $baseurl = "http://ftp.scientificlinux.org/linux/scientific/${release}"
 	   
    # Note: we can use the kernel.org mirror to limit the needed classes
-   $url = $(baseurl)/${target}
+   $url = "${baseurl}/${target}"
    
    # Get the kernel
    exec {"get_net_kernel-${name}":
