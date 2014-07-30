@@ -40,7 +40,7 @@ define quartermaster::pxe::scientific (
       distro          => $distro,
 	  p_arch          => $p_arch,
 	  linux_installer => 'anaconda',
-	  autofile        => $'kickstart',
+	  autofile        => 'kickstart',
 	  puppetlabs_repo => "http://yum.puppetlabs.com/el/${rel_major}/products/${p_arch}",
 	  inst_repo       => "${baseurl}/${release}/${p_arch}/os",
 	  update_repo     => "${baseurl}/${release}/${p_arch}/updates/security"

@@ -34,7 +34,7 @@ define quartermaster::pxe::opensuse (
       distro          => $distro,
 	  p_arch          => $p_arch,
 	  linux_installer => 'yast',
-	  autofile        => $'autoyast',
+	  autofile        => 'autoyast',
 	  puppetlabs_repo => "No PuppetLabs Repo",
 	  inst_repo       => "${baseurl}/repo/oss/boot/${p_arch}/loader",
 	  update_repo     => "${baseurl}/repo/non-oss/suse"

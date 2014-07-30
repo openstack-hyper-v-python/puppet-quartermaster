@@ -18,7 +18,7 @@ define quartermaster::pxe::redhat (
       distro          => $distro,
 	  p_arch          => $p_arch,
 	  linux_installer => 'anaconda',
-	  autofile        => $'kickstart',
+	  autofile        => 'kickstart',
 	  puppetlabs_repo => "http://yum.puppetlabs.com/el/${rel_major}/products/${p_arch}",
 	  inst_repo       => "Enterprise ISO Required",
 	  update_repo     => "Enterprise ISO Required"
