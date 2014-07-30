@@ -7,71 +7,71 @@ define quartermaster::pxe::installer (
    $distro,
    $p_arch,
    $release,
-   $rel_name,
-   $rel_num,
+   $rel_num
 ) {
    case $distro {
       ubuntu,debian: {
-	     quartermaster::pxe::debian { "${distro}-${release}-${p_arch}":
+	     quartermaster::pxe::debian { "${name}":
 		    distro    => $distro,
 		    p_arch    => $p_arch,
 			release   => $release,
-			rel_name  => $rel_name,
-			rel_num   => $rel_num,
+			rel_num   => $rel_num
 		 }
 	  }
-	  centos,scientificlinux: {
-	     quartermaster::pxe:centos { "${distro}-${release}-${p_arch}":
+	  centos: {
+	     quartermaster::pxe:centos { "${name}":
 		    distro    => $distro,
 		    p_arch    => $p_arch,
 			release   => $release,
-			rel_name  => $rel_name,
-			rel_num   => $rel_num,
+			rel_num   => $rel_num
+		 }
+	  }
+	  scientificlinux: {
+	     quartermaster::pxe:scientific { "${name}":
+		    distro    => $distro,
+		    p_arch    => $p_arch,
+			release   => $release,
+			rel_num   => $rel_num
 		 }
 	  }
 	  fedora: {
-	     quartermaster::pxe:centos { "${distro}-${release}-${p_arch}":
+	     quartermaster::pxe:centos { "${name}":
 		    distro    => $distro,
 		    p_arch    => $p_arch,
 			release   => $release,
-			rel_name  => $rel_name,
-			rel_num   => $rel_num,
+			rel_num   => $rel_num
 		 }
 	  }
 	  sles,sled: {
-	     quartermaster::pxe:sles { "${distro}-${release}-${p_arch}":
+	     quartermaster::pxe:sles { "${name}":
 		 	distro    => $distro,
 		    p_arch    => $p_arch,
 			release   => $release,
-			rel_name  => $rel_name,
-			rel_num   => $rel_num,
+			rel_num   => $rel_num
 		 }
 	  }
 	  redhat: {
-	     quartermaster::pxe:redhat { "${distro}-${release}-${p_arch}":
+	     quartermaster::pxe:redhat { "${name}":
 		 	distro    => $distro,
 		    p_arch    => $p_arch,
 			release   => $release,
-			rel_name  => $rel_name,
-			rel_num   => $rel_num,
+			rel_num   => $rel_num
 		 }
 	  }
 	  opensuse: {
-	     quartermaster::pxe:opensuse { "${distro}-${release}-${p_arch}":
+	     quartermaster::pxe:opensuse { "${name}":
 		 	distro    => $distro,
 		    p_arch    => $p_arch,
 			release   => $release,
-			rel_name  => $rel_name,
-			rel_num   => $rel_num,
+			rel_num   => $rel_num
 		 }
 	  }
 	  oraclelinux: {
-	     quartermaster::pxe:oracle { "${distro}-${release}-${p_arch}":
+	     quartermaster::pxe:oracle { "${name}":
 		 	distro    => $distro,
 		    p_arch    => $p_arch,
 			release   => $release,
-			rel_name  => $rel_name,
-			rel_num   => $rel_num,
+			rel_num   => $rel_num
 		 }
 	  }
 	  default: {

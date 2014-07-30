@@ -28,4 +28,15 @@ define quartermaster::pxe::opensuse (
      creates => "${quartermaster::tftpboot}/${distro}/${p_arch}/${rel_num}",
      require =>  [Class['quartermaster::squid_deb_proxy'], Tftp::File[ "${distro}/${p_arch}" ]],
    }
+   
+   # Create file/directory structure
+   quartermaster::pxe::structure { "${name}":
+      distro          => $distro,
+	  p_arch          => $p_arch,
+	  linux_installer => 'yast',
+	  autofile        => $'autoyast',
+	  puppetlabs_repo => "No PuppetLabs Repo",
+	  inst_repo       => "${baseurl}/repo/oss/boot/${p_arch}/loader",
+	  update_repo     => "${baseurl}/repo/non-oss/suse"
+   }
 }

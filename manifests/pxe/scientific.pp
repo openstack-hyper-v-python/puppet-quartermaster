@@ -1,6 +1,6 @@
-# Setup centos images in PXE
+# Setup scientificlinux images in PXE
 
-define quartermaster::pxe::centos (
+define quartermaster::pxe::scientific (
    $distro,
    $p_arch,
    $release,
@@ -13,16 +13,8 @@ define quartermaster::pxe::centos (
       $rel_major = $release
    }
    
-   $legacy = $rel_minor ? {
-	   /(0|1|2|3|4)/ => 'true',
-	   /(5)/         => 'false',
-   }
-   
-   $target = "/os/${p_arch}/images/pxeboot"
-   $baseurl = $legacy ? {
-	   /(true)/   => "http://vault.centos.org/${release}",
-	   /(false)/  => "http://mirror.centos.org/centos/${rel_major}",
-   }
+   $target = "${p_arch}/os/images/pxeboot"
+   $baseurl = "http://ftp.scientificlinux.org/linux/scientific/${release}"
 	   
    # Note: we can use the kernel.org mirror to limit the needed classes
    $url = $(baseurl)/${target}
@@ -50,7 +42,7 @@ define quartermaster::pxe::centos (
 	  linux_installer => 'anaconda',
 	  autofile        => $'kickstart',
 	  puppetlabs_repo => "http://yum.puppetlabs.com/el/${rel_major}/products/${p_arch}",
-	  inst_repo       => "${baseurl}/os/${p_arch}/",
-	  update_repo     => "${baseurl}/updates/${p_arch}/"
+	  inst_repo       => "${baseurl}/${release}/${p_arch}/os",
+	  update_repo     => "${baseurl}/${release}/${p_arch}/updates/security"
    }
 }
