@@ -18,7 +18,7 @@ define quartermaster::pxe::sles (
       distro          => $distro,
 	  p_arch          => $p_arch,
 	  linux_installer => 'yast',
-	  autofile        => $'autoyast',
+	  autofile        => 'autoyast',
 	  puppetlabs_repo => "No PuppetLabs Repo",
 	  inst_repo       => "Enterprise ISO Required",
 	  update_repo     => "Enterprise ISO Required",
