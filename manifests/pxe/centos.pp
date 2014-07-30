@@ -48,7 +48,7 @@ define quartermaster::pxe::centos (
       distro          => $distro,
 	  p_arch          => $p_arch,
 	  linux_installer => 'anaconda',
-	  autofile        => $'kickstart',
+	  autofile        => 'kickstart',
 	  puppetlabs_repo => "http://yum.puppetlabs.com/el/${rel_major}/products/${p_arch}",
 	  inst_repo       => "${baseurl}/os/${p_arch}/",
 	  update_repo     => "${baseurl}/updates/${p_arch}/"
