@@ -55,6 +55,6 @@ define quartermaster::pxe::debian (
 	  puppetlabs_repo => "http://apt.puppetlabs.com/dists/${rel_name}",
 	  inst_repo       => "${baseurl}/${rel_name}",
 	  update_repo     => "${baseurl}/${rel_name}",
-	  splash_url      => "${url}/boot-screens/splash.png"
+	  splashurl       => "${url}/boot-screens/splash.png"
    }
 }
