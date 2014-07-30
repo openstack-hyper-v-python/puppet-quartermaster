@@ -41,10 +41,12 @@ define quartermaster::pxe::structure (
     }
   }
   
-  tftp::file  { "${distro}/menu/${name}.graphics.conf":
+  if ! defined (Tftp::File["${distro}/menu/${name}.graphics.conf"]){
+    tftp::file  { "${distro}/menu/${name}.graphics.conf":
       ensure  => file,
       require => Tftp::File[ "${distro}/menu" ],
       content => template("quartermaster/pxemenu/${linux_installer}.graphics.erb"),
+    }
   }
 
   if ! defined (Tftp::File["${distro}/${p_arch}"]){
