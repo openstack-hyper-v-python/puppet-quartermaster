@@ -21,6 +21,7 @@ define quartermaster::pxe::redhat (
 	  autofile        => 'kickstart',
 	  puppetlabs_repo => "http://yum.puppetlabs.com/el/${rel_major}/products/${p_arch}",
 	  inst_repo       => "Enterprise ISO Required",
-	  update_repo     => "Enterprise ISO Required"
+	  update_repo     => "Enterprise ISO Required",
+	  splashurl       => "Enterprise ISO Required"
    }
 }

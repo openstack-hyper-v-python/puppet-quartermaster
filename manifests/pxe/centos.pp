@@ -51,6 +51,7 @@ define quartermaster::pxe::centos (
 	  autofile        => 'kickstart',
 	  puppetlabs_repo => "http://yum.puppetlabs.com/el/${rel_major}/products/${p_arch}",
 	  inst_repo       => "${baseurl}/os/${p_arch}/",
-	  update_repo     => "${baseurl}/updates/${p_arch}/"
+	  update_repo     => "${baseurl}/updates/${p_arch}/",
+	  splash_url      => "${baseurl}/os/${p_arch}/isolinux/splash.jpg"
    }
 }

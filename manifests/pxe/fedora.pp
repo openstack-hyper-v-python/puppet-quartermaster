@@ -43,6 +43,7 @@ define quartermaster::pxe::fedora (
 	  autofile        => 'kickstart',
 	  puppetlabs_repo => "http://yum.puppetlabs.com/fedora/f${rel_num}/products/${p_arch}",
 	  inst_repo       => "${baseurl}/${distro}/linux/releases/${release}/Fedora/${p_arch}/os",
-	  update_repo     => "${baseurl}/${distro}/linux/releases/${release}/Fedora/${p_arch}/os"
+	  update_repo     => "${baseurl}/${distro}/linux/releases/${release}/Fedora/${p_arch}/os",
+	  splashurl       => "${baseurl}/${distro}/linux/releases/${release}/Fedora/${p_arch}/os/isolinux/splash.png"
    }
 }

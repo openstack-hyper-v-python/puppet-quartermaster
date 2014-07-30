@@ -43,6 +43,7 @@ define quartermaster::pxe::scientific (
 	  autofile        => 'kickstart',
 	  puppetlabs_repo => "http://yum.puppetlabs.com/el/${rel_major}/products/${p_arch}",
 	  inst_repo       => "${baseurl}/${release}/${p_arch}/os",
-	  update_repo     => "${baseurl}/${release}/${p_arch}/updates/security"
+	  update_repo     => "${baseurl}/${release}/${p_arch}/updates/security",
+	  splashurl       => "${baseurl}/${p_arch}/os/isolinux/splash.jpg"
    }
 }

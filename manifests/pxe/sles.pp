@@ -21,6 +21,7 @@ define quartermaster::pxe::sles (
 	  autofile        => $'autoyast',
 	  puppetlabs_repo => "No PuppetLabs Repo",
 	  inst_repo       => "Enterprise ISO Required",
-	  update_repo     => "Enterprise ISO Required"
+	  update_repo     => "Enterprise ISO Required",
+	  splashurl       => "Enterprise ISO Required"
    }
 }

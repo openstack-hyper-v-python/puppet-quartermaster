@@ -5,8 +5,20 @@ define quartermaster::pxe::structure (
    $autofile,
    $puppetlabs_repo,
    $inst_repo,
-   $update_repo
+   $update_repo,
+   $splashurl
 ) {
+
+  if $splashurl =~ /(\.[^.]+)/ {
+     $bootsplash = $2
+	 exec {"get_bootsplash-${name}":
+        command => "/usr/bin/wget -c ${splashurl}  -O ${name}${bootsplash}",
+        cwd     => "${quartermaster::tftpboot}/${distro}/graphics",
+        creates => "${quartermaster::tftpboot}/${distro}/graphics/${name}${bootsplash}",
+        require =>  [ Class['quartermaster::squid_deb_proxy'], File[ "${quartermaster::tftpboot}/${distro}/graphics" ]],
+     }
+  }
+
   # create directory structure
   if ! defined (Tftp::File["${distro}"]){
     tftp::file { "${distro}":
