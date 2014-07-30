@@ -13,5 +13,6 @@ class quartermaster::params {
   $exe_mode               = '0777'
   $file_mode              = '0644'
   $dir_mode               = '0755'
+  $counter                = '0'
   $nameserver             = '4.2.2.2'
 }

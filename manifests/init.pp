@@ -53,6 +53,7 @@ class quartermaster (
   $dir_mode          = $quartermaster::params::dir_mode,
   $counter           = $quartermaster::params::counter,
   $nameserver        = $quartermaster::params::nameserver,
+  $counter           = $quartermaster::params::counter,
 ) inherits quartermaster::params {
 
   # load the image date from hiera
