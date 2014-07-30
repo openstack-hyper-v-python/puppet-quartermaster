@@ -19,7 +19,7 @@ define quartermaster::pxe::installer (
 		 }
 	  }
 	  centos: {
-	     quartermaster::pxe:centos { "${name}":
+	     quartermaster::pxe::centos { "${name}":
 		    distro    => $distro,
 		    p_arch    => $p_arch,
 			release   => $release,
@@ -27,7 +27,7 @@ define quartermaster::pxe::installer (
 		 }
 	  }
 	  scientificlinux: {
-	     quartermaster::pxe:scientific { "${name}":
+	     quartermaster::pxe::scientific { "${name}":
 		    distro    => $distro,
 		    p_arch    => $p_arch,
 			release   => $release,
@@ -35,7 +35,7 @@ define quartermaster::pxe::installer (
 		 }
 	  }
 	  fedora: {
-	     quartermaster::pxe:centos { "${name}":
+	     quartermaster::pxe::fedora{ "${name}":
 		    distro    => $distro,
 		    p_arch    => $p_arch,
 			release   => $release,
@@ -43,7 +43,7 @@ define quartermaster::pxe::installer (
 		 }
 	  }
 	  sles,sled: {
-	     quartermaster::pxe:sles { "${name}":
+	     quartermaster::pxe::sles { "${name}":
 		 	distro    => $distro,
 		    p_arch    => $p_arch,
 			release   => $release,
@@ -51,7 +51,7 @@ define quartermaster::pxe::installer (
 		 }
 	  }
 	  redhat: {
-	     quartermaster::pxe:redhat { "${name}":
+	     quartermaster::pxe::redhat { "${name}":
 		 	distro    => $distro,
 		    p_arch    => $p_arch,
 			release   => $release,
@@ -59,7 +59,7 @@ define quartermaster::pxe::installer (
 		 }
 	  }
 	  opensuse: {
-	     quartermaster::pxe:opensuse { "${name}":
+	     quartermaster::pxe::opensuse { "${name}":
 		 	distro    => $distro,
 		    p_arch    => $p_arch,
 			release   => $release,
@@ -67,7 +67,7 @@ define quartermaster::pxe::installer (
 		 }
 	  }
 	  oraclelinux: {
-	     quartermaster::pxe:oracle { "${name}":
+	     quartermaster::pxe::oracle { "${name}":
 		 	distro    => $distro,
 		    p_arch    => $p_arch,
 			release   => $release,
