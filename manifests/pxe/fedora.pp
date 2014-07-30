@@ -40,7 +40,7 @@ define quartermaster::pxe::fedora (
       distro          => $distro,
 	  p_arch          => $p_arch,
 	  linux_installer => 'anaconda',
-	  autofile        => $'kickstart',
+	  autofile        => 'kickstart',
 	  puppetlabs_repo => "http://yum.puppetlabs.com/fedora/f${rel_num}/products/${p_arch}",
 	  inst_repo       => "${baseurl}/${distro}/linux/releases/${release}/Fedora/${p_arch}/os",
 	  update_repo     => "${baseurl}/${distro}/linux/releases/${release}/Fedora/${p_arch}/os"
