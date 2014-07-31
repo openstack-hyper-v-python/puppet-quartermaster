@@ -16,9 +16,9 @@ define quartermaster::pxe {
   
   # download the kernel, ramdisk, and create file/directory structure
   quartermaster::pxe::installer{ "${name}":
-  	 distro    => $distro,
+     distro    => $distro,
      p_arch    => $p_arch,
-	 release   => $release,
-	 rel_num   => regsubst($release, '(\.)','','G')
+     release   => $release,
+     rel_num   => regsubst($release, '(\.)','','G')
   }
 }
