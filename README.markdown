@@ -138,6 +138,7 @@ Contributors
 ------------
 
  * Peter Pouliot <peter@pouliot.net>
+ * Gabriel Loewen <gabriel@thu.nder.pw>
 
 Copyright and License
 ---------------------
