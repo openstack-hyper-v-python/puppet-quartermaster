@@ -6,8 +6,8 @@ class quartermaster::params {
   $port                   = 80
   $logroot                = '/var/log/quartermaster'
   $tftpboot               = '/srv/quartermaster/tftpboot'
-  $wwwroot                = '/srv/install'
-  $nfsroot                = '/srv/nfs'
+  $wwwroot                = '/srv/quartermaster/install'
+  $nfsroot                = '/srv/quartermaster/nfs'
   $bin                    = "${wwwroot}/bin"
   $puppetmaster_fqdn      = "${fqdn}"
   $exe_mode               = '0777'
