@@ -5,7 +5,7 @@ class quartermaster::params {
   $tmp                    = '/tmp'
   $port                   = 80
   $logroot                = '/var/log/quartermaster'
-  $tftpboot               = '/srv/tftpboot'
+  $tftpboot               = '/srv/quartermaster/tftpboot'
   $wwwroot                = '/srv/install'
   $nfsroot                = '/srv/nfs'
   $bin                    = "${wwwroot}/bin"
